@@ -17,12 +17,13 @@ pipeline {
 
         stage('Code-Compile') {
             steps {
+                dir('Boardgame-main')
                 sh "mvn clean compile"
             }
         }
-
         stage('Unit-Test') {
             steps {
+                dir('Boardgame-main')
                 sh "mvn clean test"
             }
         }
