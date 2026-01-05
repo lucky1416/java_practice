@@ -1,28 +1,29 @@
 pipeline {
-    agent { label 'agent-1'}
-     
-    tools {
-        maven 'maven3.9'
-        jdk 'jdk17'
+    agent any
+    tools{
+        jdk 'JDK17'
+        maven 'maven_build'
     }
-
+    environment{
+        SCANNER_HOME = tool 'sonarscanner'
+    }
+    
     stages {
-        
-        stage('Compile') {
+        stage('git-checkout') {
             steps {
-             sh 'mvn compile'
+                git 'https://github.com/lucky1416/java_practice.git'
             }
         }
-        
-        stage('Test') {
+
+        stage('Code-Compile') {
             steps {
-              sh 'mvn test' 
+                sh "mvn clean compile"
             }
         }
-        
-        stage('Build') {
+
+        stage('Unit-Test') {
             steps {
-              sh "mvn package"
+                sh "mvn clean test"
             }
         }
     }
