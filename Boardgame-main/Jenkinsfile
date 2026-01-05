@@ -1,30 +1,35 @@
 pipeline {
     agent any
-    tools{
-        jdk 'JDK17'
+    tools {
+        jdk 'JDK17' // Ensure this matches your Jenkins Global Tool Configuration
         maven 'maven_build'
     }
-    environment{
+    environment {
         SCANNER_HOME = tool 'sonarscanner'
     }
     
     stages {
         stage('git-checkout') {
             steps {
-                git 'https://github.com/lucky1416/java_practice.git'
+                git branch: 'main', url: 'https://github.com/lucky1416/java_practice.git'
             }
         }
 
         stage('Code-Compile') {
             steps {
-                dir('Boardgame-main')
-                sh "mvn clean compile"
+                // Fixed: Added curly braces for the dir block
+                dir('Boardgame-main') { 
+                    sh "mvn clean compile"
+                }
             }
         }
+
         stage('Unit-Test') {
             steps {
-                dir('Boardgame-main')
-                sh "mvn clean test"
+                // Fixed: Added curly braces for the dir block
+                dir('Boardgame-main') {
+                    sh "mvn clean test"
+                }
             }
         }
     }
