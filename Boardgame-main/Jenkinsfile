@@ -5,7 +5,7 @@ pipeline {
         maven 'maven_build'
     }
     environment {
-        SCANNER_HOME = tool 'sonarscanner'
+        SCANNER_HOME = tool 'sonar_scanner'
     }
     
     stages {
@@ -29,6 +29,20 @@ pipeline {
                 // Fixed: Added curly braces for the dir block
                 dir('Boardgame-main') {
                     sh "mvn clean test"
+                }
+            }
+        }
+        
+        stage('scanner') {
+            steps {
+                dir('Boardgame-main') {
+                    // This block injects Sonar server URL and Auth token into the shell
+                    withSonarQubeEnv('sonarqube') {
+                        sh "${SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectName=bloggingApp \
+                            -Dsonar.projectKey=bloggingApp \
+                            -Dsonar.java.binaries=target"
+                    }
                 }
             }
         }
